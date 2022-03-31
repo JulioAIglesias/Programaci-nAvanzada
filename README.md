@@ -1,3 +1,3 @@
 # Programaci-nAvanzada
-Repositorio programación avanzada
-Julio Adrian iglesias Garduño
+Repositorio Programación Avanzada
+Julio Adrian Iglesias Garduño
