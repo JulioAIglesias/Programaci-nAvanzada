@@ -1,0 +1,34 @@
+class AngulosNoSuman180(Exception):
+    def __init__(self,suma,message="Los ángulos no suman 180 grados"):
+        self.suma=suma
+        self.message=message
+        super().__init__(self.message)
+
+class AngulosNoPositivos(Exception):
+    def __init__(self,angulo,message="Debe ingresar ángulos positivos"):
+        self.angulo=angulo
+        self.message=message
+        super().__init__(self.message)
+print("PROGRAMA QUE CALCULA LA MEDIDA DE LOS ÁNGULOS EXTERIORES DE UN TRIÁNGULO")
+while True:
+    try:
+        a=float(input("Ingrese la medida del primer ángulo: "))
+        if a<=0:
+            raise AngulosNoPositivos(a)
+        b=float(input("Ingrese la medida del segundo ángulo: "))
+        if b<=0:
+            raise AngulosNoPositivos(b)
+        c=float(input("Ingrese la medida del tercer ángilo: "))
+        if c<=0:
+            raise AngulosNoPositivos(c)
+        if a+b+c!=180:
+            raise AngulosNoSuman180(a+b+c)
+        print("La media del primer ángulo exterior es ", 180-a)
+        print("La media del segundo ángulo exterior es ", 180-b)
+        print("La media del tercer ángulo exterior es ", 180-c)
+        break
+    except AngulosNoSuman180:
+        print("Los angulos ingresados no suman 180 grados")
+    except AngulosNoPositivos:
+        print("Debe insertar angulos positivos")
+print("Fin del programa")
