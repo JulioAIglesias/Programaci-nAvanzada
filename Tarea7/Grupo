@@ -1,0 +1,220 @@
+class Grupo():
+    def __init__(self,tab):
+        self.tabla=tab
+    def SacaElementos(self):
+        claves=list(self.tabla.keys())
+        listaelementos=[]
+        a=[]
+        for i in claves:
+            for j in i:
+                a.append(j)
+        b=list(set(a))
+        for i in b:
+            listaelementos.append(e(i,self.tabla))
+        return listaelementos
+    def Asociatividad(self):
+        listaelementos=Grupo.SacaElementos(self)
+        a=True
+        for i in listaelementos:
+            for j in listaelementos:
+                for k in listaelementos:
+                    if ((i+j)+k==i+(j+k))==False:
+                        a=False
+                        break
+        return a
+    def Elementoidentidad(self):
+        listaelementos=Grupo.SacaElementos(self)
+        m=[]
+        n=len(listaelementos)
+        t=0
+        for i in range(n):
+            m.append(0)
+        for i in listaelementos:
+                for j in listaelementos:
+                    if ((i+j)==j and (j+i)==j):
+                        m[t]=m[t]+1
+                t=t+1
+        return n in m
+    def Identidad(self):
+        if Grupo.Elementoidentidad(self)==False:
+            print('Esta estructura no tiene identidad')
+        else:
+            listaelementos = Grupo.SacaElementos(self)
+            m = []
+            n = len(listaelementos)
+            t = 0
+            for i in range(n):
+                m.append(0)
+            for i in listaelementos:
+                for j in listaelementos:
+                    if ((i + j) == j and (j + i) == j):
+                         m[t] = m[t] + 1
+                if m[t] == n:
+                    cero = i
+                    return cero
+                t = t + 1
+
+    def Inversos(self):
+        if Grupo.Elementoidentidad(self)==False:
+            print('Esta estructura no tiene identidad, por lo cual no tiene inversos')
+        else:
+            listaelementos=Grupo.SacaElementos(self)
+            n=len(listaelementos)
+            cero=Grupo.Identidad(self)
+            t=0
+            m = []
+            s= []
+            for i in range(n):
+                m.append(0)
+                s.append(1)
+            for i in listaelementos:
+                for j in listaelementos:
+                    if i+j==cero and j+i==cero:
+                         m[t]=m[t]+1
+                t=t+1
+            if m==s:
+                return(True)
+            else:
+                return(False)
+
+    def Conmutatividad(self):
+        listaelementos=Grupo.SacaElementos(self)
+        m=True
+        for i in listaelementos:
+            for j in listaelementos:
+                if i+j!=j+i:
+                    m=False
+        return m
+    def Estructura(self):
+        if Grupo.Asociatividad(self)==False:
+            print('La estructura es un magma')
+        if Grupo.Asociatividad(self)==True and Grupo.Elementoidentidad(self)==False:
+            print('La estructura es un semigrupo')
+        elif Grupo.Asociatividad(self)==True and Grupo.Elementoidentidad(self)==True and Grupo.Inversos(self)==False:
+            print('La estructura es un monoide')
+        elif Grupo.Asociatividad(self)==True and Grupo.Elementoidentidad(self)==True and Grupo.Inversos(self)==True and Grupo.Conmutatividad(self)==False:
+            print('La estructura es un grupo')
+        elif Grupo.Asociatividad(self)==True and Grupo.Elementoidentidad(self)==True and Grupo.Inversos(self)==True and Grupo.Conmutatividad(self)==True:
+            print('La estructura es un grupo abeliano')
+class e():
+    def __init__(self,x,tabla):
+        self.x=x
+        self.tabla=tabla
+    def __str__(self):
+        return "{0}".format(self.x)
+    def __add__(self, other):
+        return e(self.tabla[(self.x,other.x)],self.tabla)
+    def __eq__(self, other):
+        if self.x==other.x:
+            return True
+        else:
+            return False
+    def Identidad(self):
+        claves = list(self.tabla.keys())
+        a = []
+        for i in claves:
+            for j in i:
+                a.append(j)
+        b = list(set(a))
+        n = len(b)
+        m = []
+        t = 0
+        for i in range(n):
+            m.append(0)
+        for i in b:
+            for j in b:
+                if (e(i, self.tabla) + e(j, self.tabla) == e(j, self.tabla) and e(j, self.tabla) + e(i,self.tabla) == e(j,self.tabla)):
+                    m[t] = m[t] + 1
+            if m[t] == n:
+                cero = i
+            t = t + 1
+        return cero
+    def __sub__(self, other):
+        cero=e.Identidad(self)
+        claves = list(self.tabla.keys())
+        a = []
+        for i in claves:
+            for j in i:
+                a.append(j)
+        b = list(set(a))
+        for i in b:
+            if e(i,self.tabla)+e(other.x,self.tabla)==e(cero,self.tabla) and e(other.x,self.tabla)+e(i,self.tabla)==e(cero,self.tabla):
+                return e(self.x,self.tabla)+e(i,self.tabla)
+    def orden(self):
+        claves = list(self.tabla.keys())
+        a = []
+        for i in claves:
+            for j in i:
+                a.append(j)
+        b = list(set(a))
+        n=len(b)
+        cero=e.Identidad(self)
+        if self.x==cero:
+            return 1
+        else:
+            l = e(self.x, self.tabla)
+            for i in range(n):
+                l=l+e(self.x,self.tabla)
+                if l==e(cero,self.tabla):
+                    return i+2
+                    break
+    def Inverso(self):
+        cero=e.Identidad(self)
+        return e(cero,self.tabla)-e(self.x,self.tabla)
+
+
+g=Grupo({('0','0'):'0',('0','1'):'1', ('0','2'):'2',('1','0'):'1',('1','1'):'2', ('1','2'):'0',('2','0'):'2',('2','1'):'0', ('2','2'):'1'})
+h=Grupo({('0','0'):'0',('0','1'):'1',('1','0'):'1', ('1','1'):'0'})
+t=Grupo({('1','1'):'1',('1','0'):'0',('0','1'):'0', ('0','0'):'1'})
+a=Grupo({('1','1'):'0',('1','0'):'1',('0','0'):'1', ('0','1'):'1'})
+six=Grupo({('0','0'):'0',('0','1'):'1',('0','2'):'2',('0','3'):'3',('0','4'):'4',('0','5'):'5',('1','0'):'1',('1','1'):'2',('1','2'):'3',('1','3'):'4',('1','4'):'5',('1','5'):'0',('2','0'):'2',('2','1'):'3',('2','2'):'4',('2','3'):'5',('2','4'):'0',('2','5'):'1',('3','0'):'3',('3','1'):'4',('3','2'):'5',('3','3'):'0',('3','4'):'1',('3','5'):'2',('4','0'):'4',('4','1'):'5',('4','2'):'0',('4','3'):'1',('4','4'):'2',('4','5'):'3',('5','0'):'5',('5','1'):'0',('5','2'):'1',('5','3'):'2',('5','4'):'3',('5','5'):'4'})
+#Ejemplos:
+
+'''
+print('Grupo Z/6Z:')
+print('ASOCIATIVIDAD:')
+print(six.Asociatividad())
+print('ELEMENTO IDENTIDAD:')
+print(six.Elementoidentidad())
+print('El elemento identidad es: ', six.Identidad())
+print('INVERSOS:')
+print(six.Inversos())
+print('EL inverso de 5 es:', e('5',six.tabla).Inverso())
+print('CONMUTATIVIDAD:')
+print(six.Conmutatividad())
+six.Estructura()
+print('OPERACIONES CON EL GRUPO:')
+print('4-5-3+2= ',e('4',six.tabla)-e('5',six.tabla)-e('3',six.tabla)+e('2',six.tabla))
+print('ORDEN DE UN ELEMENTO:')
+print('EL orden de 5 es:',e('5',six.tabla).orden())
+print(e('1',six.tabla).Identidad())
+
+
+print('Grupo Z/3Z:')
+print('ASOCIATIVIDAD:')
+print(g.Asociatividad())
+print('ELEMENTO IDENTIDAD:')
+print(g.Elementoidentidad())
+print('El elemento identidad es: ', g.Identidad())
+print('INVERSOS:')
+print(g.Inversos())
+print('EL inverso de 2 es:', e('2',g.tabla).Inverso())
+print('CONMUTATIVIDAD:')
+print(g.Conmutatividad())
+g.Estructura()
+print('OPERACIONES CON EL GRUPO:')
+print('1+2-1-2= ',e('1',six.tabla)+e('2',six.tabla)-e('1',six.tabla)-e('2',six.tabla))
+print('ORDEN DE UN ELEMENTO:')
+print('EL orden de 2 es:',e('2',six.tabla).orden())
+print(e('1',g.tabla).Identidad())
+
+print('a:')
+print('ASOCIATIVIDAD:')
+print(a.Asociatividad())
+print('ELEMENTO IDENTIDAD:')
+print(a.Elementoidentidad())
+print('El elemento identidad es: ', a.Identidad())
+print('INVERSOS:')
+a.Inversos()
+a.Estructura()
+'''
